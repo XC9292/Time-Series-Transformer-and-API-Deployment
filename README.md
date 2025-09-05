@@ -7,7 +7,7 @@ Implementation of a transformer-based time series model for CO2 concentration es
 - [Usage](#usage)
   - [Training](#training)
   - [Deployment](#deployment)
-   - [PostgreSQL](#postgresql)
+    - [PostgreSQL](#postgresql)
 - [Model](#model)
 - [Data](#data)
 - [Contributing](#contributing)
