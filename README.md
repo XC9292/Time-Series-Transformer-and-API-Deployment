@@ -7,6 +7,7 @@ Implementation of a transformer-based time series model for CO2 concentration es
 - [Usage](#usage)
   - [Training](#training)
   - [Deployment](#deployment)
+    - [REST Endpoint](#rest-endpoint)
     - [PostgreSQL](#postgresql)
 - [Model](#model)
 - [Data](#data)
@@ -59,8 +60,39 @@ Dockerize the pipeline (Postgres + FastAPI + preprocessing) via:
 docker compose up --build
 ```
 
-The API will be available at `http://0.0.0.0:8000`. You can refer to `api_test.ipynb` to test our dockerized API.
+#### REST Endpoint
+For API prediction, you just need to enter the time stamp in test data, such as `2014-02-07 12:04:05`. Then, the API can select all measurements before and include this data via:
+```SQL
+SELECT * FROM co2_estimation_data
+WHERE time <= :ts
+ORDER BY time;
+```
+The pre-processing function is implemented in `Product/app/main.py` to select the measurements based on the pre-defined window size (15 in API) and convert to `features` for model's prediction.
 
+The API will be available at `http://0.0.0.0:8000`. You can refer to `api_test.ipynb` to test our dockerized API.
+```Python
+import requests
+
+
+url = "http://localhost:8000/predict/timestamp"
+params = {
+    "timestamp": "2014-02-07 12:43:50"
+}
+
+%time response = requests.get(url=url, params=params)
+
+output = response.json()
+for key, value in output.items():
+    print(f"{key}: {value}")
+```
+The output is:
+```txt
+CPU times: user 4.86 ms, sys: 0 ns, total: 4.86 ms
+Wall time: 38.3 ms
+predicted_value: {'CO2@1 (%)': 0.003164813155308366, 'CO2@2 (%)': 0.0027541876770555973, 'CO2@3 (%)': 0.005456096492707729, 'CO2@4 (%)': 0.006810501683503389, 'CO2@5 (%)': 0.047059085220098495, 'CO2@6 (%)': 0.26459965109825134}
+source_timestamp: ['2014-02-07T12:33:36', '2014-02-07T12:34:19', '2014-02-07T12:35:02', '2014-02-07T12:35:46', '2014-02-07T12:36:29', '2014-02-07T12:37:12', '2014-02-07T12:37:55', '2014-02-07T12:38:38', '2014-02-07T12:39:22', '2014-02-07T12:40:05', '2014-02-07T12:40:48', '2014-02-07T12:41:31', '2014-02-07T12:42:14', '2014-02-07T12:42:58', '2014-02-07T12:43:41']
+data_points_used: 15
+```
 #### PostgreSQL
 
 The processed test data `processed_data/test_data.csv` is loaded into PostgreSQL after running above docker set up. You can open another terminal (**keep docker on**) and easily access this schema via:
