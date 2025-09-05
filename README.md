@@ -41,9 +41,8 @@ This is the recommended method for running the project. It handles the database,
 
 3. **Managing the Application:**
 
-   - To run the containers in the background (detached mode): `docker compose up -d`
+   - To run the containers without rebuilding in the background (detached mode) or foreground: `docker compose up -d` or `docker compose up`.
    - To stop the application: `docker compose down` (or `Ctrl+C` if running in the foreground).
-   - To restart without rebuilding: `docker compose up`
 
 ## API Usage
 
