@@ -26,14 +26,14 @@ This is the recommended method for running the project. It handles the database,
 
 1. **Clone the Repository:**
 
-   ```
+   ```bash
    git clone https://github.com/XC9292/Time-Series-Transformer-and-API-Deployment.git
    cd Time-Series-Transformer-and-API-Deployment/Product
    ```
 
 2. **Build and Run with Docker Compose:** This single command will build the images, start the containers, wait for the database to be healthy, load the data, and start the API server.
 
-   ```
+   ```bash
    docker compose up --build
    ```
 
@@ -52,7 +52,7 @@ You can test the endpoint using `curl` or refer to the `api_test.ipynb` notebook
 
 **Example Request:**
 
-```
+```bash
 curl -X GET "http://localhost:8000/predict/timestamp?timestamp=2014-02-07T12:43:50"
 ```
 
@@ -97,7 +97,7 @@ Once the Docker containers are running, you can connect directly to the PostgreS
 
 1. **Connect to the Database Container:** Open a new terminal and run:
 
-   ```
+   ```bash
    docker exec -it timeseries_db psql -U user -d mydatabase
    ```
 
@@ -105,7 +105,7 @@ Once the Docker containers are running, you can connect directly to the PostgreS
 
    <details> <summary><strong>✅ Expected Output</strong></summary>
 
-   ```
+   ```bash
                 List of relations
     Schema |       Name        | Type  | Owner
    --------+---------------------+-------+-------
@@ -117,7 +117,7 @@ Once the Docker containers are running, you can connect directly to the PostgreS
 
 3. **Run SQL Queries:** You can now query the data directly.
 
-   ```
+   ```SQL
    SELECT time, "6_sampling" FROM co2_estimation_data
    WHERE time > '2014-02-07 12:00:50'
    ORDER BY time DESC
@@ -126,7 +126,7 @@ Once the Docker containers are running, you can connect directly to the PostgreS
 
    <details> <summary><strong>✅ Expected Output</strong></summary>
 
-   ```
+   ```bash
            time         |     6_sampling
    ---------------------+--------------------
     2014-02-07 13:20:24 | 0.2653370295911377
@@ -147,20 +147,20 @@ Follow these steps if you want to modify the model or run the training process l
 
 2. **Create and activate a virtual environment:**
 
-   ```
+   ```bash
    python3 -m venv venv
    source venv/bin/activate
    ```
 
 3. **Install dependencies:**
 
-   ```
+   ```bash
    pip install -r requirements.txt
    ```
 
 4. **Train the Model:** Run the training script with your desired configuration (from the `cfg/` directory) and window size.
 
-   ```
+   ```bash
    python train_transformer.py --cfg transformer_selected_feature --ws 15
    ```
 
