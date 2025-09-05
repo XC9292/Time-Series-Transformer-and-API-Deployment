@@ -1,0 +1,54 @@
+version: '1.0'
+
+services:
+  # PostgreSQL Database Service
+  db:
+    image: postgres:15-alpine
+    container_name: timeseries_db
+    restart: always
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=mydatabase
+    volumes:
+      # Persists database data across container restarts
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      # Exposes the database port to the host for debugging
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d mydatabase"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # FastAPI Application Service
+  api:
+    build: .
+    container_name: prediction_api
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      # The API connects to the 'db' service on port 5432
+      - DATABASE_URL=postgresql://user:password@db:5432/mydatabase
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Data Loading Service (runs once and exits)
+  data_loader:
+    build: .
+    container_name: data_loader
+    restart: "no"
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/mydatabase
+    # Override the default CMD to run the loading script
+    command: python scripts/load_data.py
+    depends_on:
+      db:
+        condition: service_healthy
+
+# Define the named volume for data persistence
+volumes:
+  postgres_data:

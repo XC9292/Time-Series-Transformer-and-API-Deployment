@@ -1,0 +1,62 @@
+model:
+  type: "TimeSeriesTransformer_SF"
+  in_dim: 38
+  d_model: 192
+  out_dim: 6
+  num_layers: 3
+  num_heads: 3
+  ff_dim: 384
+  dropout_rate: 0.1
+
+data:
+  root_path: "./processed_data" 
+  train_batch_size: 16 
+  test_batch_size: 1
+  CO2_scale: 12.03671837
+  feature_columns: 
+    - 'TT302(0C)'
+    - 'TT300(0C)'
+    - 'TT401(0C)'
+    - 'TT303(0C)'
+    - 'TT400(0C)'
+    - 'TT113(0C)'
+    - 'TT301(0C)'
+    - 'TT202(0C)'
+    - 'TT412(0C)'
+    - 'TT309(0C)'
+    - 'TT110a(0C)'
+    - 'TT410(0C)'
+    - 'TT112(0C)'
+    - 'PT103(barg)'
+    - 'PT402(barg)'
+    - 'PT401(barg)'
+    - 'TT404(0C)'
+    - 'TT214(0C)'
+    - 'FT304(kg/hr)'
+    - 'AT100(pH)'
+    - 'FT303m3/hr'
+    - 'AT300(pH)'
+    - 'FT105(L/min)'
+    - 'FT103(kg/hr)'
+    - 'PT403(barg)'
+    - 'TT304(0C)'
+    - 'FT301m3/hr'
+    - 'TT107(0C)'
+    - 'PT110(barg)'
+    - 'PT111(barg)'
+    - 'TT210(0C)'
+    - 'TT211(0C)'
+
+optimizer:
+  type: "AdamW"
+  base_lr: 0.0004
+  min_lr: 0.0001
+  warmup_lr: 0
+  warmup_epochs: 5
+  weight_decay: 0.0001
+  epochs: 50
+
+checkpoint:
+  ckpt_path: "./Chi_models/CO2_Estimation/{}/{}"
+
+seed: 0

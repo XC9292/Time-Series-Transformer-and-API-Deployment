@@ -1,0 +1,14 @@
+requests 
+numpy
+matplotlib
+seaborn
+tqdm
+torch
+tensorboard
+scikit-learn
+fastapi[standard]
+uvicorn[standard]
+pydantic
+pandas
+sqlalchemy
+psycopg2-binary

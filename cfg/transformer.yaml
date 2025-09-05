@@ -1,0 +1,31 @@
+model:
+  type: "TimeSeriesTransformer"
+  in_dim: 97
+  d_model: 192
+  out_dim: 6
+  num_layers: 3
+  num_heads: 3
+  ff_dim: 384
+  dropout_rate: 0.1
+
+data:
+  root_path: "./processed_data" 
+  train_batch_size: 16 
+  test_batch_size: 1
+  CO2_scale: 12.03671837
+  feature_columns:
+  
+
+optimizer:
+  type: "AdamW"
+  base_lr: 0.0004
+  min_lr: 0.0001
+  warmup_lr: 0
+  warmup_epochs: 5
+  weight_decay: 0.0001
+  epochs: 50
+
+checkpoint:
+  ckpt_path: "./Chi_models/CO2_Estimation/{}/{}"
+
+seed: 0
