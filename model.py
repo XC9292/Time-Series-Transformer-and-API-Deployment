@@ -140,11 +140,6 @@ class TransformerBlock(nn.Module):
 class TimeSeriesTransformer(nn.Module):
     """
     Transformer model for time series forecasting.
-    
-    This model can be used for:
-    1. Next-step prediction (forecasting)
-    2. Sequence-to-sequence prediction
-    3. Classification tasks
     """
     
     def __init__(
@@ -214,10 +209,7 @@ class TimeSeriesTransformer(nn.Module):
             use_causal_mask: Whether to use causal masking for autoregressive prediction
             
         Returns:
-            Output tensor. Shape depends on task_type:
-            - forecasting: (batch_size, output_dim)
-            - seq2seq: (batch_size, seq_len, output_dim)
-            - classification: (batch_size, output_dim)
+            Output tensor. (batch_size, 6)
         """
         batch_size, seq_len, _ = x.shape
         
