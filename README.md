@@ -10,8 +10,6 @@ Implementation of a transformer-based time series model for CO2 concentration es
     - [PostgreSQL](#postgresql)
 - [Model](#model)
 - [Data](#data)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Installation
 
@@ -95,5 +93,3 @@ The performance analysis of the trained model is in `model_analysis.ipynb`, incl
 ## Data
 
 The dataset used for this project is located in the `data/` directory. The data is preprocessed using the `data_process.ipynb` notebook. The processed data is stored in the `processed_data/` directory.
-
-
