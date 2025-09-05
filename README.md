@@ -36,7 +36,7 @@ Implementation of a transformer-based time series model for CO2 concentration es
 
 ### Training
 
-To train the model, you can run the `train_transformer.py` script with the desired configuration file.
+To train the model, you can run the `train_transformer.py` script with the desired configuration file (I have provided two configuration files in `cfg/`).
 
 ```bash
 python train_transformer.py --cfg <config_name> --ws <window_size>
