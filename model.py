@@ -9,7 +9,7 @@ from typing import Optional, Tuple
 class PositionalEncoding(nn.Module):
     """
     Positional encoding for time series data.
-    Can use either sinusoidal encoding.
+    Can use sinusoidal encoding.
     """
     
     def __init__(self, d_model: int, max_len: int = 50):
