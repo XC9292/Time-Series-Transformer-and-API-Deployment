@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 import pandas as pd
 from sqlalchemy import create_engine, text
@@ -12,7 +13,7 @@ import numpy as np
 # Default to a standard local setup if the env var is not set.
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@db:5432/mydatabase")
 engine = create_engine(DATABASE_URL)
-
+CO2_scale = 12.03671837
 
 # --- Setup Model ---
 window_sizes = 15
@@ -97,12 +98,12 @@ def get_prediction(df: pd.DataFrame) -> dict:
         num_callback = window_sizes - 1
         
         results = {
-            "CO2@1 (%)": prediction[0].item(),
-            "CO2@2 (%)": prediction[1].item(),
-            "CO2@3 (%)": prediction[2].item(),
-            "CO2@4 (%)": prediction[3].item(),
-            "CO2@5 (%)": prediction[4].item(),
-            "CO2@6 (%)": prediction[5].item(),
+            "CO2@1 (%)": prediction[0].item()*CO2_scale,
+            "CO2@2 (%)": prediction[1].item()*CO2_scale,
+            "CO2@3 (%)": prediction[2].item()*CO2_scale,
+            "CO2@4 (%)": prediction[3].item()*CO2_scale,
+            "CO2@5 (%)": prediction[4].item()*CO2_scale,
+            "CO2@6 (%)": prediction[5].item()*CO2_scale,
         }
 
     return results, num_callback
@@ -138,13 +139,14 @@ def predict_at_timestamp(timestamp: datetime = Query(..., description="Predictio
             raise HTTPException(status_code=404, detail="No data found in the database near the specified timestamp.")
 
         prediction, num_callback = get_prediction(result_df)
+
         
 
-        return {
-            "predicted_value": prediction,
-            "source_timestamp": result_df['time'] if len(result_df) < num_callback+1 else result_df['time'].iloc[ - (num_callback + 1):],
-            "data_points_used": num_callback + 1
-        }
+        return JSONResponse({
+                            "predicted_value": prediction,
+                            "source_timestamp": result_df['time'].dt.strftime('%Y-%m-%dT%H:%M:%S').to_list() if len(result_df) < num_callback+1 else result_df['time'].iloc[ - (num_callback + 1):].dt.strftime('%Y-%m-%dT%H:%M:%S').to_list(),
+                            "data_points_used": num_callback + 1
+                            })
     except Exception as e:
         # Log the error for debugging
         print(f"An error occurred: {e}")
